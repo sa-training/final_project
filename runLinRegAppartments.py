@@ -35,6 +35,7 @@ with open('appartments.csv') as f:
             square.append(float(row[0]))
             price.append(float(row[1]))
 
+price = [price/1000 for price in price]
 square = mnl.T([square])
 price = mnl.T([price])
 train_square = square[::10]
@@ -66,7 +67,7 @@ print(f'Ошибка MSE = {mse}')
 
 plt.plot(mnl.T(test_square)[0], mnl.T(test_price)[0])
 plt.xlabel('Общая площадь квартиры, м2')
-plt.ylabel('Стоимость квартиры, руб.')
+plt.ylabel('Стоимость квартиры, тыс. руб.')
 plt.title(f'Предсказание стоимости квартиры по общей площади')
 plt.grid('on')
 plt.show()
