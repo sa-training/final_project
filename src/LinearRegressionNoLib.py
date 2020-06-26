@@ -9,8 +9,7 @@ Author: Shustov Aleksei (SemperAnte), semperante@mail.ru
 TODO:
 
 DESCRIPTION:
-    Базовая библиотека для построения линейной регрессии методом наименьших квадратов
-    
+    Базовая библиотека для построения линейной регрессии методом наименьших квадратов    
 """
 
 import matrixNoLib as mnl

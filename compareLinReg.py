@@ -11,6 +11,8 @@ TODO:
 
 DESCRIPTION:
     Проектная работа "Реализация линейной регрессии методом наименьших квадратов"
+    
+    - сравнение точности предсказания разработанного метода с методом из библиотеки scikit
 """
 import sys
 sys.path.append('src')
@@ -18,12 +20,15 @@ sys.path.append('src')
 # разработанные библиотеки линейной регресии и матричной алгебры
 import matrixNoLib as mnl
 import LinearRegressionNoLib as lrnl
+# библиотеки scikit
+from sklearn.linear_model import LinearRegression
+from sklearn.preprocessing import PolynomialFeatures
 
 import matplotlib.pyplot as plt
 import random
 import utils
 
-# Пример 1. Сгенерируем случайные данные на основе полиномиальной функции 3-й степени с добавлением шума.
+# Пример 1. Сгенерируем случайные данные на основе полиномиальной функции 3-й степени с добавлением шума
 in_length = 400 # количество точек
 in_coef = [-0.7, -0.6, 0.9, 0.6]
 in_x = [x / in_length for x in range(in_length)]
@@ -35,16 +40,13 @@ train_x = in_x[::2]
 train_y = in_y[::2]
 
 # Построение линейной регресии с помощью разработанных библиотек
-degree = 5
+degree = 3
 poly_own = lrnl.PolynomialFeatures(degree = degree)
 xnew_own = poly_own.fit_transform(train_x)
 linReg_own = lrnl.LinearRegression()
 linReg_own.fit(xnew_own, train_y)
 
 # Построение линейной регресии на основе библиотеки scikit
-from sklearn.linear_model import LinearRegression
-from sklearn.preprocessing import PolynomialFeatures
-
 poly_scikit = PolynomialFeatures(degree = degree)
 xnew_scikit = poly_scikit.fit_transform(train_x)
 linReg_scikit = LinearRegression() 
@@ -65,13 +67,18 @@ test_x = in_x[1::2]
 check_y = in_y[1::2]
 # # предсказание на основе собственной библиотеки
 x = poly_own.transform(test_x)
-test_y = linReg_own.predict(x)
-mse = utils.mse_error(test_y, check_y)
-print(f'Ошибка MSE = {mse}')
+test_y_own = linReg_own.predict(x)
+mse_own = utils.mse_error(test_y_own, check_y)
+print(f'Ошибка в предсказании для собственной библиотеки MSE = {mse_own}')
+# предсказание библиотеки scikit
+test_y_scikit = linReg_own.predict(x)
+mse_scikit = utils.mse_error(test_y_scikit, check_y)
+print(f'Ошибка в предсказании для библиотеки scikit = {mse_scikit}')
 
-# plot both methods
-plt.plot(mnl.T(test_x)[0], mnl.T(test_y)[0])
+plt.plot(mnl.T(test_x)[0], mnl.T(test_y_own)[0], '-b')
+plt.plot(mnl.T(test_x)[0], mnl.T(test_y_scikit)[0], '-g')
+plt.legend(('Исходные данные', 'Разработанная библиотека', 'Библиотека scikit'))
 plt.xlabel('Значения X')
 plt.ylabel('Значения Y')
-plt.title(f'Линейная регрессия - степень полинома {degree}')
+plt.title(f'Сравнение точности предсказания')
 plt.show()
